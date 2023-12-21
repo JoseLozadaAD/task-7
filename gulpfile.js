@@ -14,7 +14,7 @@ gulp.task('clean', () => {
   const deletions =
     env === 'prod'
       ? ['dist/css/*.css', 'dist/js/*.js']
-      : ['js/scripts.js', 'css/main.css'];
+      : ['js/all.js', 'css/main.css'];
 
   console.log(deletions);
 
@@ -59,10 +59,7 @@ gulp.task('js-min', () =>
 );
 
 gulp.task('js', () =>
-  gulp
-    .src('./js/scripts/*.js')
-    .pipe(concat('scripts.js'))
-    .pipe(gulp.dest('./js')),
+  gulp.src('./js/scripts/*.js').pipe(concat('all.js')).pipe(gulp.dest('./js')),
 );
 
 gulp.task('watch-sass', () => {
@@ -83,7 +80,7 @@ gulp.task('dev', () => {
 
   gulp.series(['js', 'css'])();
   gulp.watch('sass/**/*.scss', gulp.task('css'));
-  gulp.watch(['js/*.js', '!js/scripts.js'], gulp.task('js'));
+  gulp.watch(['js/scripts/*.js', '!js/all.js'], gulp.task('js'));
   gulp.watch('img/*', gulp.task('images'));
   gulp.watch('*.html').on('change', browserSync.reload);
   gulp.watch('css/*.css').on('change', browserSync.reload);
@@ -93,7 +90,7 @@ gulp.task('dev', () => {
 gulp.task('build', () => {
   const env = process.env.NODE_ENV || 'dev';
 
-  const js = env === 'prod' ? 'js/scripts.min.js' : '../js/scripts.js';
+  const js = env === 'prod' ? 'js/scripts.min.js' : '../js/all.js';
   const css = env === 'prod' ? 'css/main.min.css' : '../css/main.css';
 
   gulp.series(['clean', 'js-min', 'css-min', 'images'])();
